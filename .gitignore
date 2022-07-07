@@ -125,5 +125,5 @@ nb-configuration.xml
 /phpunit*.xml
 /.phpunit.*.cache
 
-public/assets/files/
-
+public/files/dokumen_pendukung/
+public/files/kgb/
