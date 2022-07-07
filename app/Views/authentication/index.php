@@ -21,7 +21,10 @@
                         <div class="col-lg-5">
                             <div class="card shadow-lg border-0 rounded-lg mt-5">
                                 <div class="card-header">
-                                    <!-- <h3 class="text-center font-weight-light my-4">Kenaikan Gaji Berkala <br>Dinas Pekerjaan Umum <br>Provinsi Sulawesi Utara</h3> -->
+                                    <div class="text-center">
+                                        <img style="width:150px" src="<?= base_url(); ?>/public/assets/img/logo-pemprov.png" alt="">
+                                        <h4 class="font-weight-light my-4">Sistem Manajemen Berkala Online <br> (SIMABO)</h4>
+                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <?php

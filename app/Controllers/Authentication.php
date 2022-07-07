@@ -29,7 +29,7 @@ class Authentication extends BaseController
         if ($pengguna) {
             if (password_verify($password, $pengguna['password'])) {
 
-                if ($pengguna['tipePengguna'] == 'pegawai' or $pengguna['tipePengguna'] == 'admin') {
+                if ($pengguna['tipePengguna'] != 'super-admin') {
                     $pegawai = $this->PegawaiModel->where('nip', $username)->first();
                     if (!$pegawai) {
                         session()->setFlashdata('error', 'Anda tidak terdaftar sebagai pegawai Dinas Pekerjaan Umum Provinsi Sulawesi Utara');
@@ -70,9 +70,12 @@ class Authentication extends BaseController
     {
         $this->PenggunaModel->save([
             // 'username' => '198301292011021001',
-            'username' => '199304152019031010',
+            // 'username' => '199304152019031010',
+            // 'username' => '198504252010012005',
+            // 'username' => '197310082012121001',
+            'username' => '197310082012121001',
             'password' => password_hash('123456', PASSWORD_DEFAULT),
-            'tipePengguna' => 'pegawai',
+            'tipePengguna' => 'operator',
             'status' => 'active'
         ]);
 

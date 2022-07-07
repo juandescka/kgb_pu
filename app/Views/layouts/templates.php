@@ -11,7 +11,7 @@ $uri = current_url(true);
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Dinas Pekerjaan Umum Provinsi Sulawesi Utara</title>
+    <title>DINAS PEKERJAAN UMUM DAN PENATAAN RUANG DAERAH PROVINSI SULAWESI UTARA</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
     <link href="<?= base_url(); ?>/public/css/styles.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
@@ -28,7 +28,7 @@ $uri = current_url(true);
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">BRAND</a>
+        <a class="navbar-brand ps-3" href="index.html">SIMABO</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <div class="ms-auto me-0 me-md-3 my-2 my-md-0"></div>
@@ -51,8 +51,10 @@ $uri = current_url(true);
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-footer">
+                    <div class="small"><?= ucfirst(session()->get('pd')); ?></div>
                     <div class="small"><?= session()->get('nip'); ?></div>
-                    <?= session()->get('nama'); ?>
+                    <?= session()->get('nama'); ?> <br>
+                    (<?= ucfirst(session()->get('tipePengguna')); ?>)
                 </div>
                 <div class="sb-sidenav-menu">
                     <!-- MENU PEGAWAI -->
@@ -69,6 +71,7 @@ $uri = current_url(true);
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="<?= base_url() ?>/kgb/daftar_pegawai">Daftar Pegawai</a>
                                 <a class="nav-link" href="<?= base_url() ?>/kgb/tambah">Tambah Usulan</a>
                                 <a class="nav-link" href="<?= base_url() ?>/kgb/riwayat">Riwayat Usulan</a>
                                 <a class="nav-link" href="<?= base_url() ?>/kgb/riwayat/diterima">Riwayat KGB</a>
@@ -92,7 +95,6 @@ $uri = current_url(true);
                         </div>
                         <!-- END MENU ADMIN -->
                     <?php endif; ?>
-                </div>
             </nav>
         </div>
         <div id="layoutSidenav_content">
@@ -122,11 +124,11 @@ $uri = current_url(true);
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2021</div>
+                        <div class="text-muted">Copyright &copy; DINAS PEKERJAAN UMUM DAN PENATAAN RUANG DAERAH PROVINSI SULAWESI UTARA <?= date('Y'); ?></div>
                         <div>
-                            <a href="#">Privacy Policy</a>
+                            <!-- <a href="#">Privacy Policy</a>
                             &middot;
-                            <a href="#">Terms &amp; Conditions</a>
+                            <a href="#">Terms &amp; Conditions</a> -->
                         </div>
                     </div>
                 </div>

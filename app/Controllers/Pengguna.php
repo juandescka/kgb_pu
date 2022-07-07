@@ -3,12 +3,14 @@
 namespace App\Controllers;
 
 use App\Models\PenggunaModel;
+use App\Models\PegawaiModel;
 
 class Pengguna extends BaseController
 {
     public function __construct()
     {
         $this->PenggunaModel = new PenggunaModel();
+        $this->PegawaiModel = new PegawaiModel();
         date_default_timezone_set("Asia/Makassar");
         session();
     }
@@ -51,5 +53,25 @@ class Pengguna extends BaseController
         session()->remove(['nip', 'nama', 'nama_jabatan', 'induk', 'pd', 'tipePengguna', 'isLoggedIn']);
         session()->setFlashData('success', 'Harap login dengan password baru!');
         return redirect()->to(base_url() . '/authentication');
+    }
+
+    public function get_pegawai()
+    {
+        $nip = $this->request->getPost('nip');
+        $pegawai = $this->PegawaiModel->where('nip', $nip)->where('pd', session()->get('pd'))->first();
+        if ($pegawai) {
+            $data = [
+                'status' => 'success',
+                'nama' => $pegawai['nama'],
+                'nip' => $pegawai['nip'],
+                'pd' => $pegawai['pd'],
+            ];
+            return json_encode($data);
+        }
+        $data = [
+            'status' => 'failed',
+            'message' => 'DATA TIDAK DITEMUKAN'
+        ];
+        return json_encode($data);
     }
 }

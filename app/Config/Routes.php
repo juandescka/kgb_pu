@@ -59,6 +59,10 @@ $routes->get('/', 'Dashboard::index');
 $routes->get('/dashboard', 'Dashboard::index');
 
 // KGB ROUTES
+$routes->get('/kgb/daftar_pegawai', 'Kgb::daftar_pegawai');
+$routes->get('/kgb/tambah_riwayat/(:any)', 'Kgb::tambah_riwayat/$1');
+$routes->post('/kgb/perbaharui_riwayat', 'Kgb::perbaharui_riwayat');
+
 $routes->get('/kgb/edit/(:any)', 'Kgb::edit/$1');
 $routes->post('/kgb/simpan', 'Kgb::simpan');
 $routes->get('/kgb/tambah', 'Kgb::tambah');
@@ -70,6 +74,7 @@ $routes->post('/kgb/riwayat/menunggu_verifikasi', 'Kgb::riwayat_menunggu_verifik
 // PENGGUNA ROUTES
 $routes->get('/pengguna/ganti_password', 'Pengguna::ganti_password');
 $routes->post('/pengguna/simpan_password', 'Pengguna::simpan_password');
+$routes->post('/pengguna/get_pegawai', 'Pengguna::get_pegawai');
 
 /*
  * --------------------------------------------------------------------
