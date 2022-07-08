@@ -12,36 +12,27 @@
         <table id="table-history-accepted">
             <thead>
                 <tr>
-                    <th>TAHUN USULAN</th>
-                    <th>BERKAS</th>
-                    <th>TANGGAL DIBUAT</th>
-                    <th>KGB</th>
+                    <th class="text-center align-middle">NO</th>
+                    <th class="text-center align-middle">PERANGKAT DAERAH</th>
+                    <th class="text-center align-middle">NIP</th>
+                    <th class="text-center align-middle">NAMA</th>
+                    <th class="text-center align-middle">TMT BERKALA</th>
+                    <th class="text-center align-middle">NO SK</th>
+                    <th class="text-center align-middle">BERKAS</th>
                 </tr>
             </thead>
             <tbody>
+                <?php $no = 1 ?>
                 <?php foreach ($kgb as $row) : ?>
                     <tr>
-                        <td><?= $row['tahun_usulan']; ?></td>
+                        <td><?= $no++; ?></td>
+                        <td><?= $row['pd']; ?></td>
+                        <td><?= $row['nip']; ?></td>
+                        <td><?= $row['nama']; ?></td>
+                        <td><?= date('d/m/Y', strtotime($row['tmt'])); ?></td>
+                        <td><?= $row['no_sk']; ?></td>
                         <td>
-                            <?php if (!is_null($row['sk_pangkat_terakhir'])) : ?>
-                                <a href="<?= base_url(); ?>/public/files/dokumen_pendukung/<?= $row['sk_pangkat_terakhir']; ?>">SK PANGKAT TERAKHIR</a> <br>
-                            <?php endif; ?>
-
-                            <?php if (!is_null($row['sk_berkala_terakhir'])) : ?>
-                                <a href="<?= base_url(); ?>/public/files/dokumen_pendukung/<?= $row['sk_berkala_terakhir']; ?>">SK BERKALA TERAKHIR</a> <br>
-                            <?php endif; ?>
-
-                            <?php if (!is_null($row['skp_terakhir'])) : ?>
-                                <a href="<?= base_url(); ?>/public/files/dokumen_pendukung/<?= $row['skp_terakhir']; ?>">SKP TERAKHIR</a> <br>
-                            <?php endif; ?>
-
-                            <?php if (!is_null($row['surat_pengantar'])) : ?>
-                                <a href="<?= base_url(); ?>/public/files/dokumen_pendukung/<?= $row['surat_pengantar']; ?>">SURAT PENGANTAR</a>
-                            <?php endif; ?>
-                        </td>
-                        <td><?= date('d-M-Y', $row['createdAt']); ?></td>
-                        <td>
-                            <a href="<?= base_url(); ?>/public/files/kgb/<?= $row['file_kgb']; ?>" class="btn btn-success"><i class="fas fa-download"></i></a>
+                            <a href="<?= base_url(); ?>/public/files/kgb/<?= $row['file_sk']; ?>" class="btn btn-success"><i class="fas fa-download"></i></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

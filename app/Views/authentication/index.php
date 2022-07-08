@@ -53,12 +53,9 @@
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                             <p></p>
-                                            <button class="btn btn-primary" type="submit">Login</button>
+                                            <button class="btn btn-primary w-100" type="submit">Login</button>
                                         </div>
                                     </form>
-                                </div>
-                                <div class="card-footer text-center py-3">
-                                    <div class="small"><a href="#">Dinas Pekerjaan Umum Provinsi Sulawesi Utara</a></div>
                                 </div>
                             </div>
                         </div>
@@ -70,7 +67,7 @@
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Dinas Pekerjaan Umum Provinsi Sulawesi Utara <?= date('Y'); ?></div>
+                        <div class="text-muted">Copyright &copy; DINAS PEKERJAAN UMUM DAN PENATAAN RUANG DAERAH PROVINSI SULAWESI UTARA <?= date('Y'); ?></div>
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;

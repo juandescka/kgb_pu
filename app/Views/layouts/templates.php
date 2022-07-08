@@ -71,7 +71,9 @@ $uri = current_url(true);
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="<?= base_url() ?>/kgb/daftar_pegawai">Daftar Pegawai</a>
+                                <?php if (session()->get('tipePengguna') == 'operator') : ?>
+                                    <a class="nav-link" href="<?= base_url() ?>/kgb/daftar_pegawai">Daftar Pegawai</a>
+                                <?php endif; ?>
                                 <a class="nav-link" href="<?= base_url() ?>/kgb/tambah">Tambah Usulan</a>
                                 <a class="nav-link" href="<?= base_url() ?>/kgb/riwayat">Riwayat Usulan</a>
                                 <a class="nav-link" href="<?= base_url() ?>/kgb/riwayat/diterima">Riwayat KGB</a>
@@ -91,6 +93,10 @@ $uri = current_url(true);
                             <a class="nav-link <?= ($uri->getSegment(3) == 'admin' and $uri->getSegment(4) == 'kgb') ? 'active' : '' ?>" href="<?= base_url(); ?>/admin/kgb">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Data KGB
+                            </a>
+                            <a class="nav-link <?= ($uri->getSegment(3) == 'admin' and $uri->getSegment(4) == 'kelola_pengguna') ? 'active' : '' ?>" href="<?= base_url(); ?>/admin/kelola_pengguna">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                                Data Pengguna
                             </a>
                         </div>
                         <!-- END MENU ADMIN -->

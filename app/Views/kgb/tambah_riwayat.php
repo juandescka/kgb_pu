@@ -57,6 +57,10 @@
                 <label for="" class="fw-bold">GAJI POKOK BARU</label>
                 <input type="text" class="form-control" name="gaji_pokok_baru" id="gaji_pokok_baru" value="<?= (old('gaji_pokok_baru')) ? old('gaji_pokok_baru') : '' ?>">
             </div>
+            <div class="form-group mt-4">
+                <label for="" class="fw-bold">BERKAS SK</label>
+                <input type="file" class="form-control" name="file_sk" id="file_sk" value="<?= (old('file_sk')) ? old('file_sk') : '' ?>">
+            </div>
 
             <button type="submit" class="btn btn-primary w-100 mt-3">TAMBAH RIWAYAT KGB</button>
         </form>

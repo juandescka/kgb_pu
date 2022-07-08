@@ -25,7 +25,7 @@ class Authentication extends BaseController
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
 
-        $pengguna = $this->PenggunaModel->where('username', $username)->first();
+        $pengguna = $this->PenggunaModel->where('username', $username)->where('status', 'active')->first();
         if ($pengguna) {
             if (password_verify($password, $pengguna['password'])) {
 
@@ -55,7 +55,7 @@ class Authentication extends BaseController
             return redirect()->to(base_url() . '/authentication');
         }
 
-        session()->setFlashdata('error', 'Akun anda tidak terdaftar!');
+        session()->setFlashdata('error', 'Akun anda tidak terdaftar atau tidak aktif, harap hubungi admin!');
         return redirect()->to(base_url() . '/authentication');
     }
 
@@ -73,7 +73,8 @@ class Authentication extends BaseController
             // 'username' => '199304152019031010',
             // 'username' => '198504252010012005',
             // 'username' => '197310082012121001',
-            'username' => '197310082012121001',
+            // 'username' => '197310082012121001',
+            'username' => '199609222020122013',
             'password' => password_hash('123456', PASSWORD_DEFAULT),
             'tipePengguna' => 'operator',
             'status' => 'active'

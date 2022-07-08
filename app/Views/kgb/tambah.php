@@ -13,7 +13,7 @@
             </div>
         <?php endif; ?>
         <form action="<?= base_url(); ?>/kgb/simpan" method="post" enctype="multipart/form-data">
-            <?php if (session()->get('tipePengguna') == 'pegawai') : ?>
+            <?php if (session()->get('tipePengguna') != 'operator') : ?>
                 <div class="form-group">
                     <label for="" class="fw-bold">NIP</label>
                     <input type="text" value="<?= session()->get('nip'); ?>" class="form-control" name="nip" readonly>
@@ -40,10 +40,6 @@
                 <h3 id="message" class="text-center text-danger fw-bold mt-3"></h3>
             <?php endif; ?>
             <div class="form-group mt-4">
-                <label for="" class="fw-bold">TAHUN USULAN</label>
-                <input type="number" class="form-control" name="tahun_usulan" value="<?= old('tahun_usulan'); ?>">
-            </div>
-            <div class="form-group mt-4">
                 <label for="" class="fw-bold">SK PANGKAT TERAKHIR</label>
                 <input type="file" class="form-control" name="sk_pangkat_terakhir">
             </div>
@@ -58,6 +54,10 @@
             <div class="form-group mt-4">
                 <label for="" class="fw-bold">SURAT PENGANTAR</label>
                 <input type="file" class="form-control" name="surat_pengantar">
+            </div>
+            <div class="form-group mt-4">
+                <label for="" class="fw-bold">TMT BERKALA TERAKHIR</label>
+                <input type="date" class="form-control" name="tmt">
             </div>
             <button class="btn btn-primary w-100 mt-3">TAMBAH USULAN</button>
         </form>

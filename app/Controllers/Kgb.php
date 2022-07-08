@@ -19,6 +19,9 @@ class Kgb extends BaseController
 
     public function daftar_pegawai()
     {
+        if (session()->get('tipePengguna') != 'operator') {
+            return redirect()->back();
+        }
         // $pegawai = $this->PegawaiModel->select('pegawai.*, tmt, DATE_ADD(tmt, INTERVAL 2 YEAR) as tmtBerkalaBerikut')->join('kgb_monitoring', 'kgb_monitoring.nip = pegawai.nip', 'left')->where('pd', session()->get('pd'))->orderBy('tmtBerkalaBerikut', 'ASC')->findAll();
         $pd = session()->get('pd');
         $db = db_connect();
@@ -39,6 +42,9 @@ class Kgb extends BaseController
 
     public function tambah_riwayat($nip)
     {
+        if (session()->get('tipePengguna') != 'operator') {
+            return redirect()->back();
+        }
         $data = [
             'pegawai' => $this->PegawaiModel->select('pegawai.nip, pegawai.nama')->where('pd', session()->get('pd'))->where('pegawai.nip', $nip)->first()
         ];
@@ -108,6 +114,14 @@ class Kgb extends BaseController
                 'errors' => [
                     'required' => 'Gaji pokok baru tidak boleh kosong'
                 ]
+            ],
+            'file_sk' => [
+                'max_size[file_sk,5120]', 'mime_in[file_sk,file_sk,application/pdf,application/force-download,application/x-download]', 'uploaded[file_sk]',
+                'errors' => [
+                    'max_size' => 'Ukuran berkas SK KGB harus  kurang dari 5 MB',
+                    'mime_in' => 'Berkas SK KGB harus memiliki format PDF',
+                    'uploaded' => 'Berkas SK KGB tidak boleh kosong',
+                ]
             ]
         ])) {
             // dd($this->request->getFile('sk_pangkat_terakhir'));
@@ -116,6 +130,11 @@ class Kgb extends BaseController
         }
 
         $tmt = $this->request->getPost('tmt');
+
+        // SK KGB
+        $file_sk = $this->request->getFile('file_sk');
+        $file_sk_nama = $nip . '-kgb-' . $file_sk->getRandomName();
+        $file_sk->move('public/files/kgb', $file_sk_nama);
 
         $this->KgbMonitoringModel->save([
             'nip' => $nip,
@@ -129,6 +148,7 @@ class Kgb extends BaseController
             'masa_kerja_bulan' => $this->request->getPost('masa_kerja_bulan'),
             'gaji_pokok_lama' => str_replace('.', '', $this->request->getPost('gaji_pokok_lama')),
             'gaji_pokok_baru' => str_replace('.', '', $this->request->getPost('gaji_pokok_baru')),
+            'file_sk' => $file_sk_nama,
             'createdBy' => session()->get('nip'),
             'createdAt' => time()
         ]);
@@ -153,12 +173,6 @@ class Kgb extends BaseController
                 'rules' => 'required',
                 'errors' => [
                     'required' => 'NIP tidak boleh kosong'
-                ]
-            ],
-            'tahun_usulan' => [
-                'required',
-                'errors' => [
-                    'required' => 'Tahun usulan tidak boleh kosong'
                 ]
             ],
             'sk_pangkat_terakhir' => [
@@ -193,13 +207,19 @@ class Kgb extends BaseController
                     'uploaded' => 'Surat Pengantar tidak boleh kosong',
                 ]
             ],
+            'tmt' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'TMT berkala tidak boleh kosong'
+                ]
+            ]
         ])) {
             // dd($this->request->getFile('sk_pangkat_terakhir'));
             session()->setFlashdata('error_input', $this->validator->listErrors());
             return redirect()->to(base_url() . '/kgb/tambah')->withInput();
         }
         $nip = $this->request->getPost('nip');
-        $tahun_usulan = $this->request->getPost('tahun_usulan');
+        $tmt = $this->request->getPost('tmt');
 
         // SK PANGKAT TERAKHIR
         $sk_pangkat_terakhir = $this->request->getFile('sk_pangkat_terakhir');
@@ -223,11 +243,11 @@ class Kgb extends BaseController
 
         $this->KgbModel->save([
             'nip' => $nip,
-            'tahun_usulan' => $tahun_usulan,
             'sk_pangkat_terakhir' => $sk_pangkat_terakhir_nama,
             'sk_berkala_terakhir' => $sk_berkala_terakhir_nama,
             'skp_terakhir' => $skp_terakhir_nama,
             'surat_pengantar' => $surat_pengantar_nama,
+            'tmt' => $tmt,
             'status' => 'pending',
             'createdBy' => session()->get('nip'),
             'createdAt' => time()
@@ -260,10 +280,12 @@ class Kgb extends BaseController
     public function riwayat_diterima()
     {
         if (session()->get('tipePengguna') == 'operator') {
-            $kgb = $this->KgbModel->select('pegawai.pd, pegawai.nama, kgb.*')->join('pegawai', 'pegawai.nip = kgb.nip')->where('pd', session()->get('pd'))->where('status', 'accepted')->findAll();
+            // $kgb = $this->KgbModel->select('pegawai.pd, pegawai.nama, kgb.*')->join('pegawai', 'pegawai.nip = kgb.nip')->where('pd', session()->get('pd'))->where('status', 'accepted')->findAll();
+            $kgb = $this->KgbMonitoringModel->select('kgb_monitoring.*, pegawai.nama, pegawai.induk, pegawai.pd')->join('pegawai', 'pegawai.nip = kgb_monitoring.nip')->where('pd', session()->get('pd'))->orderBy('tmt', 'DESC')->findAll();
             return view('kgb/riwayat/operator/diterima', ['kgb' => $kgb]);
         } else {
-            $kgb = $this->KgbModel->where('nip', session()->get('nip'))->where('status', 'accepted')->findAll();
+            // $kgb = $this->KgbModel->where('nip', session()->get('nip'))->where('status', 'accepted')->findAll();
+            $kgb = $this->KgbMonitoringModel->select('kgb_monitoring.*, pegawai.nama, pegawai.induk, pegawai.pd')->join('pegawai', 'pegawai.nip = kgb_monitoring.nip')->where('pegawai.nip', session()->get('nip'))->orderBy('tmt', 'DESC')->findAll();
             return view('kgb/riwayat/diterima', ['kgb' => $kgb]);
         }
     }

@@ -38,14 +38,16 @@ $routes->set404Override();
 
 // ADMIN ROUTES
 $routes->get('/admin', 'Admin::index', ['filter' => 'AdminFilter']);
-$routes->group('admin', static function ($routes) {
+$routes->group('admin', ['filter' => 'AdminFilter'], static function ($routes) {
     $routes->get('kgb', 'Admin::kgb');
     $routes->get('kgb/detail/(:any)', 'Admin::kgb_detail/$1');
     $routes->get('usulan_kgb', 'Admin::usulan_kgb');
     $routes->get('usulan_kgb/detail/(:any)', 'Admin::usulan_kgb_detail/$1');
     $routes->post('usulan_kgb/terima', 'Admin::usulan_kgb_terima');
     $routes->post('usulan_kgb/tolak', 'Admin::usulan_kgb_tolak');
-    $routes->get('verifikasi', 'Admin::verifikasi');
+    $routes->get('kelola_pengguna', 'Admin::kelola_pengguna');
+    $routes->post('perbaharui_pengguna', 'Admin::perbaharui_pengguna');
+    $routes->post('daftar_pengguna', 'Admin::daftar_pengguna');
 });
 
 // AUTHENTICATION ROUTES

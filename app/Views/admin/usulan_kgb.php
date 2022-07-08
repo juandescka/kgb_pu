@@ -28,8 +28,7 @@
                     <th>PERANGKAT DAERAH</th>
                     <th>NIP</th>
                     <th>NAMA</th>
-                    <th>TAHUN USULAN</th>
-                    <th>TANGGAL DIBUAT</th>
+                    <th>TMT BERKALA TERAKHIR</th>
                     <th>STATUS</th>
                     <th>AKSI</th>
                 </tr>
@@ -40,8 +39,7 @@
                         <td><?= $row['pd']; ?></td>
                         <td><?= $row['nip']; ?></td>
                         <td><?= $row['nama']; ?></td>
-                        <td><?= $row['tahun_usulan']; ?></td>
-                        <td><?= date('d-M-Y', $row['createdAt']); ?></td>
+                        <td><?= date('d/m/Y', strtotime($row['tmt'])); ?></td>
                         <td>
                             <?php if ($row['status'] == 'pending') : ?>
                                 <span class="badge rounded-pill bg-warning text-dark">Menunggu</span>

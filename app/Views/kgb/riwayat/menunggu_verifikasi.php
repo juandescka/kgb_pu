@@ -3,15 +3,16 @@
 <table id="table-history-waiting">
     <thead>
         <tr>
-            <th>TAHUN USULAN</th>
+            <th>NO</th>
             <th>BERKAS</th>
-            <th>TANGGAL DIBUAT</th>
+            <th>TMT BERKALA TERAKHIR</th>
         </tr>
     </thead>
     <tbody>
+        <?php $no = 1 ?>
         <?php foreach ($kgb as $row) : ?>
             <tr>
-                <td><?= $row['tahun_usulan']; ?></td>
+                <td><?= $no++; ?></td>
                 <td>
                     <?php if (!is_null($row['sk_pangkat_terakhir'])) : ?>
                         <a href="<?= base_url(); ?>/public/files/dokumen_pendukung/<?= $row['sk_pangkat_terakhir']; ?>">SK PANGKAT TERAKHIR</a> <br>
@@ -29,7 +30,7 @@
                         <a href="<?= base_url(); ?>/public/files/dokumen_pendukung/<?= $row['surat_pengantar']; ?>">SURAT PENGANTAR</a>
                     <?php endif; ?>
                 </td>
-                <td><?= date('d-M-Y', $row['createdAt']); ?></td>
+                <td><?= date('d/m/Y', strtotime($row['tmt'])); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

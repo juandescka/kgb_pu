@@ -88,7 +88,6 @@
                     $('#content-declined').html(data);
                 }
             });
-            $('#content-declined').html('<h2>TESTTT</h2>')
         }
 
         $('#pills-declined-tab').click(function() {

@@ -25,24 +25,27 @@
         <table id="table-kgb">
             <thead>
                 <tr>
-                    <th>PERANGKAT DAERAH</th>
-                    <th>NIP</th>
-                    <th>NAMA</th>
-                    <th>TAHUN USULAN</th>
-                    <th>TANGGAL DIBUAT</th>
-                    <th>AKSI</th>
+                    <th class="text-center align-middle">NO</th>
+                    <th class="text-center align-middle">PERANGKAT DAERAH</th>
+                    <th class="text-center align-middle">NIP</th>
+                    <th class="text-center align-middle">NAMA</th>
+                    <th class="text-center align-middle">TMT BERKALA</th>
+                    <th class="text-center align-middle">NO SK</th>
+                    <th class="text-center align-middle">BERKAS</th>
                 </tr>
             </thead>
             <tbody>
+                <?php $no = 1; ?>
                 <?php foreach ($kgb as $row) : ?>
                     <tr>
+                        <td><?= $no++; ?></td>
                         <td><?= $row['pd']; ?></td>
                         <td><?= $row['nip']; ?></td>
                         <td><?= $row['nama']; ?></td>
-                        <td><?= $row['tahun_usulan']; ?></td>
-                        <td><?= date('d-M-Y', $row['createdAt']); ?></td>
+                        <td><?= date('d/m/Y', strtotime($row['tmt'])); ?></td>
+                        <td><?= $row['no_sk']; ?></td>
                         <td>
-                            <a href="<?= base_url(); ?>/admin/usulan_kgb/detail/<?= $row['id']; ?>" class="btn btn-secondary">Detail</a>
+                            <a href="<?= base_url(); ?>/public/files/kgb/<?= $row['file_sk']; ?>" class="btn btn-success"><i class="fas fa-download"></i></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

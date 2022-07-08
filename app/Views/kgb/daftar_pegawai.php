@@ -31,7 +31,7 @@ function tmtCpns($nip)
                         <th class="text-center align-middle">TMT CPNS</th>
                         <th class="text-center align-middle">TMT BERKALA TERAKHIR</th>
                         <th class="text-center align-middle">TMT BERKALA BERIKUT</th>
-                        <th class="text-center align-middle" style="width: 50%">AKSI</th>
+                        <th class="text-center align-middle" style="width: 25%">AKSI</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,10 +45,14 @@ function tmtCpns($nip)
                             <td><?= $row['nip']; ?></td>
                             <td><?= $row['nama']; ?></td>
                             <td><?= tmtCpns($row['nip']); ?></td>
-                            <td><?= $row['tmt']; ?></td>
-                            <td><?= $row['tmtBerkalaBerikut']; ?></td>
+                            <td><?= ($row['tmt'] != '') ? date('d/m/Y', strtotime($row['tmt'])) : ''; ?></td>
+                            <td><?= ($row['tmtBerkalaBerikut'] != '') ? date('d/m/Y', strtotime($row['tmtBerkalaBerikut'])) : ''; ?></td>
                             <td class="text-center">
-                                <a href="<?= base_url(); ?>/kgb/tambah_riwayat/<?= $row['nip']; ?>" class="btn btn-sm btn-warning text-dark">Tambah Riwayat</a> <br>
+                                <a href="<?= base_url(); ?>/kgb/tambah_riwayat/<?= $row['nip']; ?>" class="btn btn-sm btn-warning text-dark w-100">Tambah Riwayat</a> <br>
+
+                                <?php if ($row['tmtBerkalaBerikut'] != '') : ?>
+                                    <a href="<?= base_url(); ?>/kgb/riwayat/diterima" class="btn btn-sm btn-primary mt-2 w-100">Lihat Riwayat</a> <br>
+                                <?php endif; ?>
 
                                 <?php
                                 $tigaBulanNotif = date('Y-m-d', strtotime('-3 months', strtotime($row['tmtBerkalaBerikut'])))
@@ -58,7 +62,7 @@ function tmtCpns($nip)
                                 if ($row['tmtBerkalaBerikut']) :
                                     if (date('Y-m-d') >= $tigaBulanNotif) :
                                 ?>
-                                        <a href="<?= base_url(); ?>/kgb/tambah?nip=<?= $row['nip']; ?>" class="btn btn-sm btn-success mt-2">Usul KGB</a>
+                                        <a href="<?= base_url(); ?>/kgb/tambah?nip=<?= $row['nip']; ?>" class="btn btn-sm btn-success mt-2 w-100">Usul KGB</a>
                                 <?php
                                     endif;
                                 endif;

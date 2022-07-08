@@ -3,12 +3,18 @@
 namespace App\Controllers;
 
 use App\Models\KgbModel;
+use App\Models\KgbMonitoringModel;
+use App\Models\PenggunaModel;
+use App\Models\PegawaiModel;
 
 class Admin extends BaseController
 {
     public function __construct()
     {
         $this->KgbModel = new KgbModel();
+        $this->KgbMonitoringModel = new KgbMonitoringModel();
+        $this->PenggunaModel = new PenggunaModel();
+        $this->PegawaiModel = new PegawaiModel();
         date_default_timezone_set("Asia/Makassar");
         session();
     }
@@ -20,8 +26,9 @@ class Admin extends BaseController
 
     public function kgb()
     {
+        $kgb = $this->KgbMonitoringModel->select('kgb_monitoring.*, pegawai.nama, pegawai.induk, pegawai.pd')->join('pegawai', 'pegawai.nip = kgb_monitoring.nip')->orderBy('tmt', 'DESC')->findAll();
         $data = [
-            'kgb' => $this->KgbModel->select('kgb.*, pegawai.nip, pegawai.nama, pegawai.induk, pegawai.pd')->join('pegawai', 'pegawai.nip = kgb.nip')->where('status', 'accepted')->orderBy('id', 'DESC')->findAll()
+            'kgb' => $kgb
         ];
         return view('admin/kgb', $data);
     }
@@ -69,12 +76,72 @@ class Admin extends BaseController
         $nip = $this->request->getPost('nip');
 
         if (!$this->validate([
-            'file_kgb' => [
-                'max_size[file_kgb,5120]', 'mime_in[file_kgb,file_kgb,application/pdf,application/force-download,application/x-download]', 'uploaded[file_kgb]',
+            'nip' => [
+                'rules' => 'required',
                 'errors' => [
-                    'max_size' => 'Ukuran berkas SK Pangkat Terakhir harus  kurang dari 5 MB',
-                    'mime_in' => 'Berkas SK Pangkat terakhir harus memiliki format PDF',
-                    'uploaded' => 'SK Pangkat terakhir tidak boleh kosong',
+                    'required' => 'NIP tidak boleh kosong'
+                ]
+            ],
+            'jabatan' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Jabatan tidak boleh kosong'
+                ]
+            ],
+            'golongan' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Golongan tidak boleh kosong'
+                ]
+            ],
+            'tanggal_sk' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Tanggal SK tidak boleh kosong'
+                ]
+            ],
+            'no_sk' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'No SK tidak boleh kosong'
+                ]
+            ],
+            'tmt' => [
+                'required',
+                'errors' => [
+                    'required' => 'TMT Berkala tidak boleh kosong'
+                ]
+            ],
+            'masa_kerja_tahun' => [
+                'required',
+                'errors' => [
+                    'required' => 'Masa kerja tahun tidak boleh kosong'
+                ]
+            ],
+            'masa_kerja_bulan' => [
+                'required',
+                'errors' => [
+                    'required' => 'Masa kerja bulan tidak boleh kosong'
+                ]
+            ],
+            'gaji_pokok_lama' => [
+                'required',
+                'errors' => [
+                    'required' => 'Gaji pokok lama tidak boleh kosong'
+                ]
+            ],
+            'gaji_pokok_baru' => [
+                'required',
+                'errors' => [
+                    'required' => 'Gaji pokok baru tidak boleh kosong'
+                ]
+            ],
+            'file_sk' => [
+                'max_size[file_sk,5120]', 'mime_in[file_sk,file_sk,application/pdf,application/force-download,application/x-download]', 'uploaded[file_sk]',
+                'errors' => [
+                    'max_size' => 'Ukuran berkas SK KGB harus  kurang dari 5 MB',
+                    'mime_in' => 'Berkas SK KGB harus memiliki format PDF',
+                    'uploaded' => 'Berkas SK KGB tidak boleh kosong',
                 ]
             ]
         ])) {
@@ -82,21 +149,40 @@ class Admin extends BaseController
             return redirect()->to(base_url() . '/admin/usulan_kgb/detail/' . $id)->withInput();
         }
 
-        // SK PANGKAT TERAKHIR
-        $file_kgb = $this->request->getFile('file_kgb');
-        $file_kgb_nama = $nip . '-kgb-' . $file_kgb->getRandomName();
-        $file_kgb->move('public/files/kgb', $file_kgb_nama);
+        $tmt = $this->request->getPost('tmt');
+
+        // SK KGB
+        $file_sk = $this->request->getFile('file_sk');
+        $file_sk_nama = $nip . '-kgb-' . $file_sk->getRandomName();
+        $file_sk->move('public/files/kgb', $file_sk_nama);
+
+        $this->KgbMonitoringModel->save([
+            'nip' => $nip,
+            'tmt' => $tmt,
+            'jabatan' => $this->request->getPost('jabatan'),
+            'golongan' => $this->request->getPost('golongan'),
+            'tanggal_sk' => $this->request->getPost('tanggal_sk'),
+            'no_sk' => $this->request->getPost('no_sk'),
+            'tmt' => $this->request->getPost('tmt'),
+            'masa_kerja_tahun' => $this->request->getPost('masa_kerja_tahun'),
+            'masa_kerja_bulan' => $this->request->getPost('masa_kerja_bulan'),
+            'gaji_pokok_lama' => str_replace('.', '', $this->request->getPost('gaji_pokok_lama')),
+            'gaji_pokok_baru' => str_replace('.', '', $this->request->getPost('gaji_pokok_baru')),
+            'file_sk' => $file_sk_nama,
+            'createdBy' => session()->get('nip'),
+            'createdAt' => time()
+        ]);
 
         $this->KgbModel->save([
             'id' => $id,
-            'file_kgb' => $file_kgb_nama,
+            'file_kgb' => $file_sk_nama,
             'status' => 'accepted',
             'updatedAt' => time(),
             'updatedBy' => session()->get('nip')
         ]);
 
-        session()->setFlashdata('success', 'Berhasil menerima usulan KGB');
-        return redirect()->to(base_url() . '/admin/kgb/detail/' . $id);
+        session()->setFlashdata('success', 'Berhasil menerima usulan KGB milik ' . $nip);
+        return redirect()->to(base_url() . '/admin/kgb/');
     }
 
     public function usulan_kgb_tolak()
@@ -126,8 +212,55 @@ class Admin extends BaseController
         return redirect()->to(base_url() . '/admin/usulan_kgb/detail/' . $id);
     }
 
-    public function verifikasi()
+    public function kelola_pengguna()
     {
-        return view('admin/verifikasi');
+        $pengguna = $this->PegawaiModel->select('pengguna.id as penggunaId, pengguna.tipePengguna, pengguna.status, pegawai.*')->join('pengguna', 'pengguna.username = pegawai.nip', 'left')->findAll();
+        $data = [
+            'title' => 'Kelola Pengguna',
+            'pengguna' => $pengguna
+        ];
+        return view('admin/kelola_pengguna', $data);
+    }
+
+    public function perbaharui_pengguna()
+    {
+        $penggunaId = $this->request->getPost('penggunaId');
+        $tipePengguna = $this->request->getPost('tipePengguna');
+        $statusPengguna = $this->request->getPost('statusPengguna');
+        $password = $this->request->getPost('password');
+
+        $this->PenggunaModel->save([
+            'id' => $penggunaId,
+            'tipePengguna' => $tipePengguna,
+            'status' => $statusPengguna
+        ]);
+
+        if ($password != '') {
+            $this->PenggunaModel->save([
+                'id' => $penggunaId,
+                'password' => password_hash($password, PASSWORD_DEFAULT)
+            ]);
+        }
+
+        session()->setFlashdata('success', 'Berhasil memperbaharui data pengguna');
+        return redirect()->to(base_url() . '/admin/kelola_pengguna');
+    }
+
+    public function daftar_pengguna()
+    {
+        $nip = $this->request->getPost('nip');
+        $tipePengguna = $this->request->getPost('tipePengguna');
+        $statusPengguna = $this->request->getPost('statusPengguna');
+        $password = $this->request->getPost('password');
+
+        $this->PenggunaModel->save([
+            'username' => $nip,
+            'tipePengguna' => $tipePengguna,
+            'status' => $statusPengguna,
+            'password' => password_hash($password, PASSWORD_DEFAULT)
+        ]);
+
+        session()->setFlashdata('success', 'Berhasil mendaftarkan pengguna');
+        return redirect()->to(base_url() . '/admin/kelola_pengguna');
     }
 }
